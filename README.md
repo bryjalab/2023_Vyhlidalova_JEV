@@ -8,10 +8,10 @@ Vyhlídalová Kotrbová A, Gömöryová K, Mikulová A, Kravec M, Plešingerová
 
 ## Reproducing the data analysis from this article
 
-**Deposition of raw data to PRIDE**
+### Deposition of raw data to PRIDE
 Raw proteomic data were deposited to the ProteomeXchange Consortium via PRIDE and can be accessed by identifier [PXD041751](https://www.ebi.ac.uk/pride/archive?keyword=PXD041751).
 
-**Analysis of MS data**
+### Analysis of MS data
 
 This repository contains three folders required to obtain the tables and figures from the manuscript:
 
