@@ -39,6 +39,6 @@ This repository contains three folders required to obtain the tables and figures
   - 10_RNAseq_comparison_b.R (*Fig. 5A, 5B', 5C*)
   - 11_flow_cytometric_data_transformation.R 
   - 12_flow_cytometric_data_clustering_and_annotation.R (*Fig. 5C'*, *Suppl. Fig. 3A*)
-  - 13_flow_cytometric_data_generating_final_plots.R (*Fig. 5C, 5C'*)
+  - 13_flow_cytometric_data_generating_of_final_plots.R (*Fig. 5C, 5C'*)
   
 `outputs`: resulting Figures/Tables (some have been adjusted further in Affinity Designer software)
