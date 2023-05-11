@@ -16,7 +16,7 @@ os <- read.csv2(here("data", "survival-data.csv")) %>%
   mutate(Dead = as.numeric(Dead)) #%>% 
  
 # Load data with MS intensities 
-load(here("analysis", "05_data.filtered.Rdata")) 
+load(here("analysis", "05_filter-out-B-samples", "05_data.filtered.Rdata")) 
 
 # Load 157 proteins specific for cancer patients
 load(here("output", "09_controls-addition", "09_patient-specific-data.Rdata"))
