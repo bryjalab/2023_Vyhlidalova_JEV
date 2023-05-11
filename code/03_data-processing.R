@@ -88,3 +88,51 @@ data <- data %>%
 save(data, file = here("outputs", "03_data-processed", "03_data-processed.RData"))
 write.csv(data, file = here("outputs", "03_data-processed", "03_data-processed.csv"))
 
+
+
+########################### SEC vs. UC CORRELATION #############################
+
+# Additional libraries required
+library(tidyr)
+library(ggplot2)
+library(viridis)
+library(ggprism)
+library(ggpubr)
+
+# Delete controls and not-detected proteins
+data <- data %>% 
+  select(-c(starts_with("C"))) %>%
+  filter(rowSums(.[, -c(1:3)]) != 0)
+ 
+# Arrange the data 
+# Filter information from SEC samples
+data.long.sec <- data.filtered %>% 
+  select(c(name, starts_with("S"), -Suggested.Symbol)) %>% 
+  pivot_longer(cols = starts_with("S"), 
+               names_to = "patient", 
+               names_prefix = "S", 
+               values_to = "S")
+
+# Filter information from UC samples
+data.long.uc <- data.filtered %>% 
+  select(c(name, starts_with("U")))%>% 
+  pivot_longer(cols = starts_with("U"), names_to = "patient", names_prefix = "U", values_to = "U")
+
+# Combine
+data.long <- cbind(data.long.sec, data.long.uc[, 3]) %>%  
+  mutate(name = as.factor(name)) %>% 
+  mutate(patient = as.factor(patient))
+
+# Plot the Pearson Correlation for mass spectrometry intensities in samples 
+# isolated by SEC vs. in samples isolated by UC
+pdf(here("output", "06_methods-intersection", "06_methods_Pearson-linear_legend.pdf"))
+ggplot(data.long, aes(x = log10(S), y = log10(U))) +
+  geom_point() + 
+  stat_density_2d(aes(fill = ..level..), geom = "polygon") +
+  theme_prism() +
+  theme(legend.position = "none") +
+  scale_fill_viridis() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "SEC - MS intensity (log10)", y = "UC - MS intensity (log10)") +
+  stat_cor(method = "pearson", label.x = 1, size = 5)
+dev.off()
