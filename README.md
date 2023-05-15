@@ -42,3 +42,5 @@ This repository contains three folders required to obtain the tables and figures
   - 13_flow_cytometric_data_generating_of_final_plots.R (*Fig. 5C, 5C'*)
   
 `outputs`: resulting Figures/Tables (some have been adjusted further in Affinity Designer software)
+
+To reproduce the analyses, the user is expected to create an R-project, and download the folders `data` and `code`. `outputs` folder (and subsequent output folder structure) will be created while running the 01_DLS-data.R script or following scripts, respectively.
