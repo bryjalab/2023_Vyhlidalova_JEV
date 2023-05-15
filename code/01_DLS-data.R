@@ -9,6 +9,9 @@ library(tidyr)
 library(ggplot2)
 library(svglite)
 
+# Create outputs directory
+dir.create(here('outputs'))
+
 # Create directory for files output
 dir.create(here('outputs', '01_DLS-data'))
 
