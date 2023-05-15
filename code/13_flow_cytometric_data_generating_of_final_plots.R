@@ -12,7 +12,7 @@ setwd("outputs/14_percentages-of-celltypes/")
 # Plot with populations of epithelial cells, fibroblasts, macrophages and T cells
 ## Loading of the data
 
-ep_fib_mac_Tcells <- read.xlsx('ascites_epithelial_cells_fibroblasts_macrophages_Tcells.xlsx', sheetName = 'long format')
+ep_fib_mac_Tcells <- read.xlsx('ascites_main_celltypes_with_Tcells.xlsx', sheetName = 'long format')
 
 ## Re-typing and re-ordering of the patient IDs
 
@@ -30,7 +30,7 @@ ep_fib_mac_Tcells$celltype <- factor(ep_fib_mac_Tcells$celltype,
 ggplot(ep_fib_mac_Tcells, 
        aes(x = Patient, y = percentage, fill = celltype)) +
   geom_bar(stat = 'identity') +
-  scale_fill_manual(values = c('#f2746a','#7bae41','#1ebdbf','#a880b9','#f9a31b','#717171')) +
+  scale_fill_manual(values = c('#f2746a','#7bae41','#1ebdbf','#a880b9')) +
   ylab('Cell type summary')
 
 
@@ -41,7 +41,7 @@ ggplot(ep_fib_mac_Tcells,
 # Plot with populations of epithelial cells, fibroblasts and macrophages
 ## Loading of the data
 
-ep_fib_macs <- read.xlsx('ascites_epithelial_cells_fibroblasts_macrophages.xlsx', sheetName = 'long format')
+ep_fib_macs <- read.xlsx('ascites_main_celltypes.xlsx', sheetName = 'long format')
 
 ## Re-typing and re-ordering of the patient IDs
 
@@ -59,5 +59,5 @@ ep_fib_macs$celltype <- factor(ep_fib_macs$celltype,
 ggplot(ep_fib_macs, 
        aes(x = Patient, y = percentage, fill = celltype)) +
   geom_bar(stat = 'identity') +
-  scale_fill_manual(values = c('#f2746a','#7bae41','#1ebdbf','#a880b9','#f9a31b','#717171')) +
+  scale_fill_manual(values = c('#f2746a','#7bae41','#1ebdbf')) +
   ylab('Cell type summary')
