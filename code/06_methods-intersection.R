@@ -9,35 +9,13 @@ library(reshape2)
 library(UpSetR)
 library(ggplot2)
 
+source(here('code', "functions.R"))
+
 # Create a new directory for processed data:
 dir.create(here('outputs', '06_methods-intersection'))
 
 # Load the data
 load(here("outputs", "05_filter-out-B-samples", "05_data.filtered.Rdata"))
-
-# Function to create intersections for each patient between UC and SEC methods
-make_intersections <- function (data, U, S, number) {
-  require(dplyr)
-  require(lazyeval)
-  
-  U <- enquo(U)
-  S <- enquo(S)
-  
-  pU <- data %>%
-    filter(!is.na(!!U)) %>%
-    select(Suggested.Symbol)
-  
-  pS <- data %>%
-    filter(!is.na(!!S)) %>%
-    select(Suggested.Symbol)
-  
-  patient_tmp <- list( pU, pS)
-  names_list <- c(paste("U", number, sep = ""),
-                  paste("S", number, sep = ""))
-  names(patient_tmp) <- names_list
-  
-  patients <- append(patients, list(patient_tmp))
-}
 
 # Create the intersections
 patients <- list()

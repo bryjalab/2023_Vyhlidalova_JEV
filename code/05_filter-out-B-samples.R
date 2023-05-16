@@ -8,6 +8,8 @@ library(dplyr)
 library(ggplot2)
 library(tidyr)
 
+source(here('code', "functions.R"))
+
 # Create a new directory for processed data:
 dir.create(here('outputs', '05_filter-out-B-samples'))
 
@@ -55,28 +57,7 @@ data %>%
        y = "Number of proteins")
 dev.off()
 
-# Filter out patient-specifically B samples
-filter_B <- function (data, B, U, S) {
-  require(dplyr)
-  require(lazyeval)
-  B <- enquo(B)
-  U <- enquo(U)
-  S <- enquo(S)
-  
-  U.B <- data %>%
-    filter(!!U != 0 & !!B == 0)
-  
-  S.B <- data %>%
-    filter(!!S != 0 & !!B == 0)
-  
-  tmp <- tmp %>%
-    left_join(., U.B %>% select(Suggested.Symbol, !!U), by = "Suggested.Symbol") %>%
-    left_join(., S.B %>% select(Suggested.Symbol, !!S), by = "Suggested.Symbol") %>%
-    select(-Suggested.Symbol)
-  
-  data.filtered <- cbind(data.filtered, tmp)
-}
-
+# Filter-out B samples
 tmp <- data.frame(Suggested.Symbol = data$Suggested.Symbol)
 data.filtered <- data.frame(Suggested.Symbol = data$Suggested.Symbol)
 
