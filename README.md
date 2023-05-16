@@ -44,3 +44,5 @@ This repository contains three folders required to obtain the tables and figures
 `outputs`: resulting Figures/Tables (some have been adjusted further in Affinity Designer software)
 
 To reproduce the analyses, the user is expected to create an R-project, and download the folders `data` and `code`. `outputs` folder (and subsequent output folder structure) will be created while running the 01_DLS-data.R script or following scripts, respectively.
+
+All analyses were conducted using R version 4.2.2 (2022-10-31 ucrt) running on Windows 10 x64.
