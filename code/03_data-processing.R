@@ -106,7 +106,7 @@ data <- data %>%
  
 # Arrange the data 
 # Filter information from SEC samples
-data.long.sec <- data.filtered %>% 
+data.long.sec <- data %>% 
   select(c(name, starts_with("S"), -Suggested.Symbol)) %>% 
   pivot_longer(cols = starts_with("S"), 
                names_to = "patient", 
@@ -114,7 +114,7 @@ data.long.sec <- data.filtered %>%
                values_to = "S")
 
 # Filter information from UC samples
-data.long.uc <- data.filtered %>% 
+data.long.uc <- data %>% 
   select(c(name, starts_with("U")))%>% 
   pivot_longer(cols = starts_with("U"), names_to = "patient", names_prefix = "U", values_to = "U")
 
