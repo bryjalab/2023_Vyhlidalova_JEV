@@ -12,8 +12,8 @@ library(ggprism)
 
 
 # Load data
-SEC.df <- read.csv(here("output", "11_RNAseq-comparison_II", "11_RNAseq_heatmap-SEC_percent-table-2.csv"))
-UC.df <- read.csv(here("output", "11_RNAseq-comparison_II", "11_RNAseq_heatmap-UC_percent-table-2.csv"))
+SEC.df <- read.csv(here("outputs", "11_RNAseq-comparison_II", "11_RNAseq_heatmap-SEC_percent-table.csv"))
+UC.df <- read.csv(here("outputs", "11_RNAseq-comparison_II", "11_RNAseq_heatmap-UC_percent-table.csv"))
 
 # Transform data to long format
 SEC_long <- SEC.df[, -1] %>%
@@ -34,8 +34,8 @@ data.long <- inner_join(x = SEC_long, y = UC_long[, 3:4], by = "id")
 my.rmc.cells <- rmcorr(participant = cell.type , measure1 = SEC, measure2 = UC,
                        dataset = data.long)
 # Plot with legend
-svg(here("output", "11_RNASeq-comparison_II", "11_rmcorr_SECvsUC_legend.svg"))
-pdf(here("output", "11_RNASeq-comparison_II", "11_rmcorr_SECvsUC_legend.pdf"))
+svg(here("outputs", "11_RNASeq-comparison_II", "11_rmcorr_SECvsUC_legend.svg"))
+pdf(here("outputs", "11_RNASeq-comparison_II", "11_rmcorr_SECvsUC_legend.pdf"))
 ggplot(data.long, aes(x = SEC , y = UC, color = cell.type , group = cell.type )) + 
   geom_line(aes(x = SEC, y = my.rmc.cells$model$fitted.values), size = 1) + 
   geom_point() + 

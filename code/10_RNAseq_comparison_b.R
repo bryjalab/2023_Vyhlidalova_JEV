@@ -17,7 +17,7 @@ dir.create(here('outputs', '11_RNAseq-comparison_II'))
 RNAseq_markers <- read.csv(here('outputs', '02_data-cleaning', 'updated_Izar_cell_markers_updated.csv'))
 
 # Filter just the subset of proteins defined by Izar:
-RNAseq_markers <- RNAseq_markers[RNAseq_markers$Gene.name %in% c("CLDN3", "FOLR1", "ELF3", "CLDN4", "EPCAM", "TACSTD2", "KRTCAP3", "MMP7", "CLDN7", "SOX17",
+RNAseq_markers <- RNAseq_markers[RNAseq_markers$Gene.Name %in% c("CLDN3", "FOLR1", "ELF3", "CLDN4", "EPCAM", "TACSTD2", "KRTCAP3", "MMP7", "CLDN7", "SOX17",
                                                   "PRSS22", "C1orf186", "TSPAN1", "CKB", "S100A14", "LCN2", "SMIM22", "KLF5", "TMEM139",
                                                   "FXYD3", "PRSS8", "IGF2", "LYNX1", "WNT7A", "SPINT2", "KCNK15", "LYPD1", "SCNN1A", "MEDAG",
                                                   "FGF7", "COL1A1", "DCN", "SERPINE1", "COL1A2", "VCAM1", "EMILIN1", "NID2", "BDKRB1", "COL3A1",
@@ -79,14 +79,15 @@ SEC_long <- pivot_longer(SEC_long, cols = patient_1:patient_11, names_to = 'pati
 svg(here('outputs', '11_RNAseq-comparison_II', '11_RNAseq_heatmap-SEC.svg'))
 #pdf(here('outputs', '11_RNAseq-comparison_II', '11_RNAseq-heatmap-SEC.pdf'))
 SEC_long %>%
-  group_by(patient) %>%
-  mutate(intensity_norm = intensity/sum(intensity)) %>%
   group_by(patient, cell.type) %>%
-  summarise(sum_category = sum(intensity_norm)) %>%
+  mutate(mean.iBAQ = mean(intensity)) %>%
+  ungroup() %>%
+  group_by(patient) %>%
+  mutate(iBAQ.percent = mean.iBAQ/sum(intensity)*100) %>%
   mutate(patients_factor = factor(patient, levels = c("patient_1", "patient_2", "patient_3", "patient_4",
                                                       "patient_5", "patient_6", "patient_7", "patient_8",
                                                       "patient_9", "patient_10", "patient_11"))) %>%
-  ggplot(., aes(x = patients_factor, y = sum_category, fill = cell.type))+
+  ggplot(., aes(x = patients_factor, y = iBAQ.percent, fill = cell.type))+
   geom_bar(stat = "identity")  +
   theme(axis.text.x = element_text(angle = 45,  hjust=1))+
   labs(title = "RNAseq SEC")
@@ -118,17 +119,21 @@ UC_long <- as.data.frame(UC_final)
 UC_long <- left_join(rownames_to_column(UC_long), RNAseq_subset_binary %>% select(value, cell.type), by = c("rowname" = "value"))
 UC_long <- pivot_longer(UC_long, cols = patient_1:patient_11, names_to = 'patient', values_to = 'intensity')
 
+# Save SEC and UC long dataframes
+save(SEC_long, UC_long, file = here('outputs', '11_RNAseq-comparison_II', '11_SEC-UC-long-df.RData'))
+
 svg(here('outputs', '11_RNAseq-comparison_II', '11_RNAseq_heatmap-UC.svg'))
-pdf(here('outputs', '11_RNAseq-comparison_II', '11_RNAseq-heatmap-UC.pdf'))
+#pdf(here('outputs', '11_RNAseq-comparison_II', '11_RNAseq-heatmap-UC.pdf'))
 UC_long %>%
-  group_by(patient) %>%
-  mutate(intensity_norm = intensity/sum(intensity)) %>%
   group_by(patient, cell.type) %>%
-  summarise(sum_category = sum(intensity_norm)) %>%
+  mutate(mean.iBAQ = mean(intensity)) %>%
+  ungroup() %>%
+  group_by(patient) %>%
+  mutate(iBAQ.percent = mean.iBAQ/sum(intensity)*100) %>%
   mutate(patients_factor = factor(patient, levels = c("patient_1", "patient_2", "patient_3", "patient_4",
                                                       "patient_5", "patient_6", "patient_7", "patient_8",
                                                       "patient_9", "patient_10", "patient_11"))) %>%
-  ggplot(., aes(x = patients_factor, y = sum_category, fill = cell.type))+
+  ggplot(., aes(x = patients_factor, y = iBAQ.percent, fill = cell.type))+
   geom_bar(stat = "identity")  +
   theme(axis.text.x = element_text(angle = 45,  hjust=1))+
   labs(title = "RNAseq UC")
@@ -138,20 +143,29 @@ dev.off()
 # Create tables with percentages
 
 SEC.df <- SEC_long %>%
-  group_by(patient) %>%
-  mutate(intensity_norm = intensity/sum(intensity)*100) %>%
   group_by(patient, cell.type) %>%
-  summarise(sum_category = sum(intensity_norm)) %>%
-  pivot_wider(names_from = "patient", values_from = "sum_category")
+  mutate(mean.iBAQ = mean(intensity)) %>%
+  ungroup() %>%
+  group_by(patient) %>%
+  mutate(iBAQ.percent = mean.iBAQ/sum(intensity)*100) %>%
+  group_by(patient, cell.type) %>%
+  summarise(sum.percent = sum(iBAQ.percent)) %>%
+  pivot_wider(names_from = "patient", values_from = "sum.percent")
+
+SEC.df <- SEC.df[, c(1,2, 5:12, 3,4)]
 
 write.csv(SEC.df, here('outputs', '11_RNAseq-comparison_II', '11_RNAseq_heatmap-SEC_percent-table.csv'))
 
 UC.df <- UC_long %>%
-  group_by(patient) %>%
-  mutate(intensity_norm = intensity/sum(intensity)*100) %>%
   group_by(patient, cell.type) %>%
-  summarise(sum_category = sum(intensity_norm)) %>%
-  pivot_wider(names_from = "patient", values_from = "sum_category")
+  mutate(mean.iBAQ = mean(intensity)) %>%
+  ungroup() %>%
+  group_by(patient) %>%
+  mutate(iBAQ.percent = mean.iBAQ/sum(intensity)*100) %>%
+  group_by(patient, cell.type) %>%
+  summarise(sum.percent = sum(iBAQ.percent)) %>%
+  pivot_wider(names_from = "patient", values_from = "sum.percent")
+
+UC.df <- UC.df[, c(1,2, 5:12, 3,4)]
 
 write.csv(UC.df, here('outputs', '11_RNAseq-comparison_II', '11_RNAseq_heatmap-UC_percent-table.csv'))
-
