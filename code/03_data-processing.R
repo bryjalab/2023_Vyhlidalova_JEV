@@ -13,12 +13,13 @@ dir.create(here('outputs', '03_data-processed'))
 # Proteomics data input (proteinGroups.txt table from MaxQuant)
 data <- read.csv(here('outputs', '02_data-cleaning', 'updated_proteinGroups.csv'), stringsAsFactors = FALSE)
 
-# Select columns containing intensities
+# Select columns containing iBAQ intensities
 data <- data %>%
-  select(Suggested.Symbol, name, ID, starts_with("Intensity."))
+  select(Suggested.Symbol, name, ID, starts_with("iBAQ.")) %>%
+  select(-iBAQ.peptides)
 
 # Rename the columns
-colnames(data) <- gsub("Intensity.", "", colnames(data))
+colnames(data) <- gsub("iBAQ.", "", colnames(data))
 
 # Remove samples with chemo patients and patient 88
 data <- data %>%
@@ -96,7 +97,7 @@ write.csv(data, file = here("outputs", "03_data-processed", "03_data-processed.c
 library(tidyr)
 library(ggplot2)
 library(viridis)
-library(ggprism)
+#library(ggprism)
 library(ggpubr)
 
 # Delete controls and not-detected proteins

@@ -17,7 +17,7 @@ dir.create(here('outputs', '06_methods-intersection'))
 # Load the data
 load(here("outputs", "05_filter-out-B-samples", "05_data.filtered.Rdata"))
 
-# Create the intersections
+# Create the intersections between S and U for each patient separately
 patients <- list()
 
 patients <- make_intersections(data.filtered, U1, S1, 1)

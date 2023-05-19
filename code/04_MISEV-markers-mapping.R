@@ -17,10 +17,12 @@ data.MISEV <- read.csv(here('outputs', '02_data-cleaning', 'updated_MISEV_protei
 # Map MISEV data onto our protein data
 data.merged <- left_join(data.MISEV, data, by = c("Suggested.Symbol" = "Suggested.Symbol"))
 
+# Remove unnecessary columns
 data.merged <- data.merged %>%
   select(-c(C1:C5)) %>%
   select(-X, -Approved, -ID, - name)
 
+# Define columns order
 col_order <- c("category",  "marker", "Suggested.Symbol", "U1","U2","U3","U4","U5","U6","U7","U8","U9","U10","U11",
                "S1","S2","S3","S4","S5","S6","S7","S8","S9","S10","S11",
                "B1","B2","B3","B4","B5","B6","B7","B8","B9","B10","B11")

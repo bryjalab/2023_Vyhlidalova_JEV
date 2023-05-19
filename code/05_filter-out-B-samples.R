@@ -18,9 +18,9 @@ load(here("outputs", "03_data-processed", "03_data-processed.RData"))
 
 # Plot the number of proteins per each method
 svg(here("outputs", "05_filter-out-B-samples", "05_barplot-protein-numbers-methods.svg"))
-pdf(here("outputs", "05_filter-out-B-samples", "05_barplot-protein-numbers-methods.pdf"))
+#pdf(here("outputs", "05_filter-out-B-samples", "05_barplot-protein-numbers-methods.pdf"))
 data %>%
-  pivot_longer(cols = c(4:42), names_to = "Condition", values_to = "Intensity") %>%
+  pivot_longer(cols = c(4:41), names_to = "Condition", values_to = "Intensity") %>%
   mutate(Method = case_when(grepl("S", Condition) ~ "S",
                             grepl("B", Condition) ~ "B",
                             TRUE ~ "U") ) %>%
