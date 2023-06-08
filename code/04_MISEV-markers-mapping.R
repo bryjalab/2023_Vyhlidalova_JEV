@@ -35,6 +35,7 @@ write.csv(data.merged, here("outputs", "04_MISEV-markers-mapping", "04_MISEV-mar
 
 # Filter out NA values
 data.merged <- na.omit(data.merged)
+
 # Filter out rows with zeros only
 data.merged <- data.merged %>%
   rowwise() %>%
@@ -98,4 +99,3 @@ dev.off()
 
 # Export the table behind the heatmap (binary)
 write.csv(data.heatmap, here("outputs", "04_MISEV-markers-mapping", "04_MISEV-markers-mapped_binary-matrix.csv"))
-
