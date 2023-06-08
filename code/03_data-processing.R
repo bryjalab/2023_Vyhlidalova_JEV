@@ -13,13 +13,12 @@ dir.create(here('outputs', '03_data-processed'))
 # Proteomics data input (proteinGroups.txt table from MaxQuant)
 data <- read.csv(here('outputs', '02_data-cleaning', 'updated_proteinGroups.csv'), stringsAsFactors = FALSE)
 
-# Select columns containing iBAQ intensities
+# Select columns containing intensities
 data <- data %>%
-  select(Suggested.Symbol, name, ID, starts_with("iBAQ.")) %>%
-  select(-iBAQ.peptides)
+  select(Suggested.Symbol, name, ID, starts_with("Intensity.")) 
 
 # Rename the columns
-colnames(data) <- gsub("iBAQ.", "", colnames(data))
+colnames(data) <- gsub("Intensity.", "", colnames(data))
 
 # Remove samples with chemo patients and patient 88
 data <- data %>%
@@ -97,7 +96,7 @@ write.csv(data, file = here("outputs", "03_data-processed", "03_data-processed.c
 library(tidyr)
 library(ggplot2)
 library(viridis)
-#library(ggprism)
+library(ggprism)
 library(ggpubr)
 
 # Delete controls and not-detected proteins
@@ -126,7 +125,7 @@ data.long <- cbind(data.long.sec, data.long.uc[, 3]) %>%
 
 # Plot the Pearson Correlation for mass spectrometry intensities in samples 
 # isolated by SEC vs. in samples isolated by UC
-pdf(here("output", "06_methods-intersection", "06_methods_Pearson-linear_legend.pdf"))
+pdf(here('outputs', '03_data-processed', "03_methods_Pearson-linear_legend.pdf"))
 ggplot(data.long, aes(x = log10(S), y = log10(U))) +
   geom_point() + 
   stat_density_2d(aes(fill = ..level..), geom = "polygon") +
