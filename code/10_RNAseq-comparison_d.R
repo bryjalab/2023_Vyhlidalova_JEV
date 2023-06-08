@@ -41,7 +41,7 @@ SEC.pval <- SEC.merge %>%
 
 # Plot with legend
 svg(here("outputs", "11_RNASeq-comparison_II", "11_fold-enrichment_SEC.svg"))
-pdf(here("outputs", "11_RNASeq-comparison_II", "11_fold-enrichment_SEC.pdf"))
+#pdf(here("outputs", "11_RNASeq-comparison_II", "11_fold-enrichment_SEC.pdf"))
 q <- SEC.merge %>% 
   ggplot(aes(x = cell.type, y = fold_enrichment_log2)) +
   geom_point(size = 3, aes(col = cell.type, shape = cell.type)) +
@@ -76,7 +76,7 @@ UC.pval <- UC.merge %>%
 
 # Plot with legend
 svg(here("outputs", "11_RNASeq-comparison_II", "11_fold-enrichment_UC.svg"))
-pdf(here("outputs", "11_RNASeq-comparison_II", "11_fold-enrichment_UC.pdf"))
+#pdf(here("outputs", "11_RNASeq-comparison_II", "11_fold-enrichment_UC.pdf"))
 q <- UC.merge %>% 
   ggplot(aes(x = cell.type, y = fold_enrichment_log2)) +
   geom_point(size = 3, aes(col = cell.type, shape = cell.type)) +
