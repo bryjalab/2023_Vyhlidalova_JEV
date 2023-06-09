@@ -37,7 +37,7 @@ my.rmc.cells <- rmcorr(participant = cell.type , measure1 = SEC, measure2 = UC,
 svg(here("outputs", "11_RNASeq-comparison_II", "11_rmcorr_SECvsUC_legend.svg"))
 pdf(here("outputs", "11_RNASeq-comparison_II", "11_rmcorr_SECvsUC_legend.pdf"))
 ggplot(data.long, aes(x = SEC , y = UC, color = cell.type , group = cell.type )) + 
-  geom_line(aes(x = SEC, y = my.rmc.cells$model$fitted.values), size = 1) + 
+  geom_line(aes(x = SEC, y = my.rmc.cells$model$fitted.values), linewidth= 1) + 
   geom_point() + 
   theme_prism() + 
   xlim(0, 100) +
