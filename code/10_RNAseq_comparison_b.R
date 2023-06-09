@@ -80,14 +80,14 @@ svg(here('outputs', '11_RNAseq-comparison_II', '11_RNAseq_heatmap-SEC.svg'))
 #pdf(here('outputs', '11_RNAseq-comparison_II', '11_RNAseq-heatmap-SEC.pdf'))
 SEC_long %>%
   group_by(patient, cell.type) %>%
-  mutate(mean.iBAQ = mean(intensity)) %>%
+  mutate(mean.intensity = mean(intensity)) %>%
   ungroup() %>%
   group_by(patient) %>%
-  mutate(iBAQ.percent = mean.iBAQ/sum(intensity)*100) %>%
+  mutate(intensity.percent = mean.intensity/sum(intensity)*100) %>%
   mutate(patients_factor = factor(patient, levels = c("patient_1", "patient_2", "patient_3", "patient_4",
                                                       "patient_5", "patient_6", "patient_7", "patient_8",
                                                       "patient_9", "patient_10", "patient_11"))) %>%
-  ggplot(., aes(x = patients_factor, y = iBAQ.percent, fill = cell.type))+
+  ggplot(., aes(x = patients_factor, y = intensity.percent, fill = cell.type))+
   geom_bar(stat = "identity")  +
   theme(axis.text.x = element_text(angle = 45,  hjust=1))+
   labs(title = "RNAseq SEC")
@@ -126,14 +126,14 @@ svg(here('outputs', '11_RNAseq-comparison_II', '11_RNAseq_heatmap-UC.svg'))
 #pdf(here('outputs', '11_RNAseq-comparison_II', '11_RNAseq-heatmap-UC.pdf'))
 UC_long %>%
   group_by(patient, cell.type) %>%
-  mutate(mean.iBAQ = mean(intensity)) %>%
+  mutate(mean.intensity = mean(intensity)) %>%
   ungroup() %>%
   group_by(patient) %>%
-  mutate(iBAQ.percent = mean.iBAQ/sum(intensity)*100) %>%
+  mutate(iBAQ.percent = mean.intensity/sum(intensity)*100) %>%
   mutate(patients_factor = factor(patient, levels = c("patient_1", "patient_2", "patient_3", "patient_4",
                                                       "patient_5", "patient_6", "patient_7", "patient_8",
                                                       "patient_9", "patient_10", "patient_11"))) %>%
-  ggplot(., aes(x = patients_factor, y = iBAQ.percent, fill = cell.type))+
+  ggplot(., aes(x = patients_factor, y = intensity.percent, fill = cell.type))+
   geom_bar(stat = "identity")  +
   theme(axis.text.x = element_text(angle = 45,  hjust=1))+
   labs(title = "RNAseq UC")
@@ -144,12 +144,12 @@ dev.off()
 
 SEC.df <- SEC_long %>%
   group_by(patient, cell.type) %>%
-  mutate(mean.iBAQ = mean(intensity)) %>%
+  mutate(mean.intensity = mean(intensity)) %>%
   ungroup() %>%
   group_by(patient) %>%
-  mutate(iBAQ.percent = mean.iBAQ/sum(intensity)*100) %>%
+  mutate(intensity.percent = mean.intensity/sum(intensity)*100) %>%
   group_by(patient, cell.type) %>%
-  summarise(sum.percent = sum(iBAQ.percent)) %>%
+  summarise(sum.percent = sum(intensity.percent)) %>%
   pivot_wider(names_from = "patient", values_from = "sum.percent")
 
 SEC.df <- SEC.df[, c(1,2, 5:12, 3,4)]
@@ -158,12 +158,12 @@ write.csv(SEC.df, here('outputs', '11_RNAseq-comparison_II', '11_RNAseq_heatmap-
 
 UC.df <- UC_long %>%
   group_by(patient, cell.type) %>%
-  mutate(mean.iBAQ = mean(intensity)) %>%
+  mutate(mean.intensity = mean(intensity)) %>%
   ungroup() %>%
   group_by(patient) %>%
-  mutate(iBAQ.percent = mean.iBAQ/sum(intensity)*100) %>%
+  mutate(intensity.percent = mean.intensity/sum(intensity)*100) %>%
   group_by(patient, cell.type) %>%
-  summarise(sum.percent = sum(iBAQ.percent)) %>%
+  summarise(sum.percent = sum(intensity.percent)) %>%
   pivot_wider(names_from = "patient", values_from = "sum.percent")
 
 UC.df <- UC.df[, c(1,2, 5:12, 3,4)]
