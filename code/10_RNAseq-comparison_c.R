@@ -27,7 +27,7 @@ UC_long <- UC.df[, -1] %>%
   mutate(id = paste(cell.type, patient, sep = "_"))
 
 data.long <- inner_join(x = SEC_long, y = UC_long[, 3:4], by = "id")
- 
+data.long$cell.type <- as.factor(data.long$cell.type)
 
 # Repeated measure correlation - SEC vs. UC
 # Model
