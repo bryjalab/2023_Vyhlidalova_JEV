@@ -9,6 +9,7 @@ library(tidyr)
 library(ggplot2)
 library(ggprism)
 library(rstatix)
+library(ggpubr)
 
 # Load the data
 primary.cells <- data.frame(patient = c(1:10),
@@ -35,26 +36,26 @@ SEC.merge$cell.type <- as.factor(SEC.merge$cell.type)
 
 SEC.merge$fold_enrichment_log2 <- log2(SEC.merge$fold_enrichment)
 
-SEC.pval <- SEC.merge %>%
-    emmeans_test(fold_enrichment_log2 ~ cell.type, p.adjust.method = "bonferroni") %>%
-    rstatix::add_xy_position()
-
-# Plot with legend
-svg(here("outputs", "11_RNASeq-comparison_II", "11_fold-enrichment_SEC.svg"))
-pdf(here("outputs", "11_RNASeq-comparison_II", "11_fold-enrichment_SEC.pdf"))
-q <- SEC.merge %>% 
-  ggplot(aes(x = cell.type, y = fold_enrichment_log2)) +
-  geom_point(size = 3, aes(col = cell.type, shape = cell.type)) +
-  theme_prism(axis_text_angle = 45, base_size = 12)+
-  stat_summary(fun="mean", geom="point", color="black", size=2,
-               fun.min = function(z) { quantile(z,0.25) },
-               fun.max = function(z) { quantile(z,0.75) }) +
-  stat_summary(fun="mean", geom="segment", mapping=aes(xend=..x.. - 0.4, yend=..y..),  color="black")+
-  stat_summary(fun="mean", geom="segment", mapping=aes(xend=..x.. + 0.4, yend=..y..),  color="black")+
-  scale_shape_prism()
-
-q + add_pvalue(SEC.pval, remove.bracket = TRUE, y.position = c(10, 11, 10))
-dev.off()
+# SEC.pval <- SEC.merge %>%
+#     emmeans_test(fold_enrichment_log2 ~ cell.type, p.adjust.method = "bonferroni") %>%
+#     rstatix::add_xy_position()
+# 
+# # Plot with legend
+# svg(here("outputs", "11_RNASeq-comparison_II", "11_fold-enrichment_SEC.svg"))
+# pdf(here("outputs", "11_RNASeq-comparison_II", "11_fold-enrichment_SEC.pdf"))
+# q <- SEC.merge %>% 
+#   ggplot(aes(x = cell.type, y = fold_enrichment_log2)) +
+#   geom_point(size = 3, aes(col = cell.type, shape = cell.type)) +
+#   theme_prism(axis_text_angle = 45, base_size = 12)+
+#   stat_summary(fun="mean", geom="point", color="black", size=2,
+#                fun.min = function(z) { quantile(z,0.25) },
+#                fun.max = function(z) { quantile(z,0.75) }) +
+#   stat_summary(fun="mean", geom="segment", mapping=aes(xend=..x.. - 0.4, yend=..y..),  color="black")+
+#   stat_summary(fun="mean", geom="segment", mapping=aes(xend=..x.. + 0.4, yend=..y..),  color="black")+
+#   scale_shape_prism()
+# 
+# q + add_pvalue(SEC.pval, remove.bracket = TRUE, y.position = c(10, 11, 10))
+# dev.off()
 
 ### UC
 UC.merge <- UC_long %>%
@@ -70,13 +71,72 @@ UC.merge$cell.type <- as.factor(UC.merge$cell.type)
 
 UC.merge$fold_enrichment_log2 <- log2(UC.merge$fold_enrichment)
 
-UC.pval <- UC.merge %>%
-  emmeans_test(fold_enrichment_log2 ~ cell.type, p.adjust.method = "bonferroni") %>%
-  rstatix::add_xy_position()
+# UC.pval <- UC.merge %>%
+#   emmeans_test(fold_enrichment_log2 ~ cell.type, p.adjust.method = "bonferroni") %>%
+#   rstatix::add_xy_position()
+# 
+# # Plot with legend
+# svg(here("outputs", "11_RNASeq-comparison_II", "11_fold-enrichment_UC.svg"))
+# pdf(here("outputs", "11_RNASeq-comparison_II", "11_fold-enrichment_UC.pdf"))
+# q <- UC.merge %>% 
+#   ggplot(aes(x = cell.type, y = fold_enrichment_log2)) +
+#   geom_point(size = 3, aes(col = cell.type, shape = cell.type)) +
+#   theme_prism(axis_text_angle = 45, base_size = 12)+
+#   stat_summary(fun="mean", geom="point", color="black", size=2,
+#                fun.min = function(z) { quantile(z,0.25) },
+#                fun.max = function(z) { quantile(z,0.75) }) +
+#   stat_summary(fun="mean", geom="segment", mapping=aes(xend=..x.. - 0.4, yend=..y..),  color="black")+
+#   stat_summary(fun="mean", geom="segment", mapping=aes(xend=..x.. + 0.4, yend=..y..),  color="black")+
+#   scale_shape_prism()
+# 
+# q + add_pvalue(UC.pval, remove.bracket = TRUE, y.position = c(10, 11, 10))
+# dev.off()
 
-# Plot with legend
-svg(here("outputs", "11_RNASeq-comparison_II", "11_fold-enrichment_UC.svg"))
-pdf(here("outputs", "11_RNASeq-comparison_II", "11_fold-enrichment_UC.pdf"))
+# Repeated measures ANOVA
+
+# SEC
+# Compute repeated measures anova
+res.aov.SEC <- anova_test(data = SEC.merge, dv = fold_enrichment_log2 , wid = patient, within = cell.type)
+get_anova_table(res.aov.SEC)
+pwc.SEC <- SEC.merge %>%
+  pairwise_t_test(
+    fold_enrichment_log2 ~ cell.type, paired = TRUE,
+    p.adjust.method = "bonferroni"
+  )
+pwc.SEC
+
+pwc.SEC <- pwc.SEC %>% add_xy_position(x = "cell.type")
+
+svg(here("outputs", "11_RNASeq-comparison_II", "11_fold-enrichment_SEC_anova.svg"))
+pdf(here("outputs", "11_RNASeq-comparison_II", "11_fold-enrichment_SEC_anova.pdf"))
+q <- SEC.merge %>% 
+  ggplot(aes(x = cell.type, y = fold_enrichment_log2)) +
+  geom_point(size = 3, aes(col = cell.type, shape = cell.type)) +
+  theme_prism(axis_text_angle = 45, base_size = 12)+
+  stat_summary(fun="mean", geom="point", color="black", size=2,
+               fun.min = function(z) { quantile(z,0.25) },
+               fun.max = function(z) { quantile(z,0.75) }) +
+  stat_summary(fun="mean", geom="segment", mapping=aes(xend=..x.. - 0.4, yend=..y..),  color="black")+
+  stat_summary(fun="mean", geom="segment", mapping=aes(xend=..x.. + 0.4, yend=..y..),  color="black")+
+  scale_shape_prism()
+
+q + add_pvalue(pwc.SEC, remove.bracket = TRUE, y.position = c(10, 11, 10))
+dev.off()
+
+# UC
+res.aov.UC <- anova_test(data = UC.merge, dv = fold_enrichment_log2 , wid = patient, within = cell.type)
+get_anova_table(res.aov.UC)
+pwc.UC <- UC.merge %>%
+  pairwise_t_test(
+    fold_enrichment_log2 ~ cell.type, paired = TRUE,
+    p.adjust.method = "bonferroni"
+  )
+pwc.UC
+
+pwc.UC <- pwc.UC %>% add_xy_position(x = "cell.type")
+
+svg(here("outputs", "11_RNASeq-comparison_II", "11_fold-enrichment_UC_anova.svg"))
+pdf(here("outputs", "11_RNASeq-comparison_II", "11_fold-enrichment_UC_anova.pdf"))
 q <- UC.merge %>% 
   ggplot(aes(x = cell.type, y = fold_enrichment_log2)) +
   geom_point(size = 3, aes(col = cell.type, shape = cell.type)) +
@@ -88,6 +148,5 @@ q <- UC.merge %>%
   stat_summary(fun="mean", geom="segment", mapping=aes(xend=..x.. + 0.4, yend=..y..),  color="black")+
   scale_shape_prism()
 
-q + add_pvalue(UC.pval, remove.bracket = TRUE, y.position = c(10, 11, 10))
+q + add_pvalue(pwc.UC, remove.bracket = TRUE, y.position = c(10, 11, 10))
 dev.off()
-
