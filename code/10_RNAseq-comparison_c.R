@@ -48,5 +48,3 @@ ggplot(data.long, aes(x = SEC , y = UC, color = cell.type , group = cell.type ))
   annotate("text", x = 60, y = 2, label = paste("p = ", format(my.rmc.cells$p, scientific = TRUE, digits = 3)), hjust = 0) 
 dev.off() 
 
-
-
