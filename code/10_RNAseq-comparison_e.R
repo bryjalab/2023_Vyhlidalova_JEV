@@ -61,7 +61,7 @@ ggplot(data.long, aes(x = FC, y = SEC, color = cell.type, group = cell.type)) +
   labs(x = "FC (%)", y = "SEC (%)", title = "Repeated measure correlation: SEC") +
   theme(plot.title = element_text(hjust = 0.5)) +
   annotate("text", x = 60, y = 14, label = paste("r", "=", round(my.rmc.cells.SEC$r, digits = 3), sep = " "), hjust = 0) +
-  annotate("text", x = 60, y = 8, label = paste("95% CI:", round(my.rmc.cells.SEC$CI[1], digits = 3), "-", round(my.rmc.cells$CI[2], digits = 3)), hjust = 0) +
+  annotate("text", x = 60, y = 8, label = paste("95% CI:", round(my.rmc.cells.SEC$CI[1], digits = 3), "-", round(my.rmc.cells.SEC$CI[2], digits = 3)), hjust = 0) +
   annotate("text", x = 60, y = 2, label = paste("p = ", format(my.rmc.cells.SEC$p, scientific = TRUE, digits = 3)), hjust = 0) 
 dev.off()
 
@@ -81,6 +81,6 @@ ggplot(data.long, aes(x = FC, y = UC, color = cell.type, group = cell.type)) +
   labs(x = "FC (%)", y = "UC (%)", title = "Repeated measure correlation: UC") +
   theme(plot.title = element_text(hjust = 0.5)) +
   annotate("text", x = 60, y = 14, label = paste("r", "=", round(my.rmc.cells.UC$r, digits = 3), sep = " "), hjust = 0) +
-  annotate("text", x = 60, y = 8, label = paste("95% CI:", round(my.rmc.cells.UC$CI[1], digits = 3), "-", round(my.rmc.cells$CI[2], digits = 3)), hjust = 0) +
+  annotate("text", x = 60, y = 8, label = paste("95% CI:", round(my.rmc.cells.UC$CI[1], digits = 3), "-", round(my.rmc.cells.UC$CI[2], digits = 3)), hjust = 0) +
   annotate("text", x = 60, y = 2, label = paste("p = ", format(my.rmc.cells.UC$p, scientific = TRUE, digits = 3)), hjust = 0) 
 dev.off()
