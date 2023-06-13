@@ -17,12 +17,15 @@ This repository contains three folders required to obtain the tables and figures
 
 `data`: contains input tables for data analysis
 
-  - proteinGroups.txt - table containing mass spectrometry data (output of MaxQuant)
+  - proteinGroups - table containing mass spectrometry data (output of MaxQuant). Due to the size of PG table, please download the PG table from PRIDE repositry as mentioned above
   - DSV_analysis_input - DLS measurement data
   - MISEV2018_protein_categories - list of EV markers based on MISEV 2018 ([Thery et al., 2018](https://pubmed.ncbi.nlm.nih.gov/30637094/))
   - preys-latest - protein localization assignment based on the [Human Cell Map](https://humancellmap.org/) resource
   - RNAseq_S2_table - supplementary table 2 from [Izar et al. (2020)](https://www.nature.com/articles/s41591-020-0926-0)
   - Izar_cell_markers_updated - list of cell type markers provided by Izar
+  - genenames_update_20220816 - updated gene names from [HGNC](https://www.genenames.org/)
+  - survival-data - survival data of patients
+  - flow_data_percentages_all_populations_final - cell population detected by flow cytometry
   
 `code`: contains individual scripts
 
@@ -37,12 +40,16 @@ This repository contains three folders required to obtain the tables and figures
   - 09_controls-addition.R (*Suppl. Table 7*)
   - 10_RNAseq_comparison_a.R (*Fig. 4B, 4C*)
   - 10_RNAseq_comparison_b.R (*Fig. 5A, 5B', 5C*)
+  - 10_RNAseq_comparison_c.R
+  - 10_RNAseq_comparison_d.R
+  - 10_RNAseq_comparison_e.R
   - 11_flow_cytometric_data_transformation.R 
   - 12_flow_cytometric_data_clustering_and_annotation.R (*Fig. 5C'*, *Suppl. Fig. 3A*)
   - 13_flow_cytometric_data_generating_of_final_plots.R (*Fig. 5C, 5C'*)
+  - 14_survival-analysis.R
   
 `outputs`: resulting Figures/Tables (some have been adjusted further in Affinity Designer software)
 
-To reproduce the analyses, the user is expected to create an R-project, and download the folders `data` and `code`. `outputs` folder (and subsequent output folder structure) will be created while running the 01_DLS-data.R script or following scripts, respectively.
+To reproduce the analyses, the user is expected to create an R-project, and download the folders `data` (please download proteinGroups table from PRIDE) and `code`. `outputs` folder (and subsequent output folder structure) will be created while running the 01_DLS-data.R script or following scripts, respectively.
 
-All analyses were conducted using R version 4.2.2 (2022-10-31 ucrt) running on Windows 10 x64.
+All analyses were conducted using R version 4.3.0 (2022-10-31 ucrt) running on Windows 10 x64.
