@@ -40,5 +40,7 @@ This repository contains three folders required to obtain the tables and figures
   - 11_flow_cytometric_data_transformation.R 
   - 12_flow_cytometric_data_clustering_and_annotation.R (*Fig. 5C'*, *Suppl. Fig. 3A*)
   - 13_flow_cytometric_data_generating_of_final_plots.R (*Fig. 5C, 5C'*)
+  - 14_survival-analysis.R
+  - 15_FlowJo_vs_FlowSOM_output_correlation.R (*Suppl. Fig. 3B'*)
   
 `outputs`: resulting Figures/Tables (some have been adjusted further in Affinity Designer software)
