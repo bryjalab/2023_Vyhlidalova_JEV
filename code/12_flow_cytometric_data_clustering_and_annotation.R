@@ -9,12 +9,14 @@ library(FlowSOM)
 library(Seurat)
 library(xlsx)
 
-# Setting of the working directory
+# Creating the outputs directory
+dir.create(here('outputs'))
 
-setwd("outputs/13_transformed-fcs-files/")
+# Creating the directory for files output
+dir.create(here('outputs','12_flow-cytometric-data-percentages-of-celltypes'))
+dir.create(here('outputs','13_flow-cytometric-data-output-plots'))
 
 # Loading of transformed files
-
 fcs_files <- list.files(pattern = ".fcs$")
 
 fs <- read.flowSet(fcs_files, 
@@ -321,19 +323,27 @@ ascites_annotated <- filterSCE(ascites_annotated,
 
 # Plot of t-SNE with annotated populations
 
-plotDR(ascites_annotated, 
+plot1 <- plotDR(ascites_annotated, 
        dr = "TSNE", 
        color_by = "Celltypes", 
        k_pal = c('#f2746a','#7bae41','#039be5','#1A237E','#ce93d8','#ab47bc','#7b1fa2','#f9a31b','#717171'))
 
+save(plot1, file = here('outputs','13_flow-cytometric-data-output-plots','ascites_all_populations_tSNE.svg'))
+save(plot1, file = here('outputs','13_flow-cytometric-data-output-plots','ascites_all_populations_tSNE.pdf'))
+
+
 # Plot with abundances of annotated populations
 
-plotAbundances(ascites_annotated, 
+plot2 <- plotAbundances(ascites_annotated, 
                k = "Celltypes", 
                by = "sample_id", 
                group_by = NULL, 
                col_clust = FALSE, 
                k_pal = c('#f2746a','#7bae41','#039be5','#1A237E','#ce93d8','#ab47bc','#7b1fa2','#f9a31b','#717171'))
+
+save(plot2, file = here('outputs','13_flow-cytometric-data-output-plots','percentages_all_populations.svg'))
+save(plot2, file = here('outputs','13_flow-cytometric-data-output-plots','percentages_all_populations.pdf'))
+
 
 # Extraction of counts of distinct celltypes across patients
 
@@ -347,8 +357,5 @@ annotated_populations <- table(ascites_seurat@meta.data$sample_id,
                                group.by = ascites_seurat@meta.data$Celltypes)
 
 # Export of the celltype counts across patients
-
-setwd("outputs/14_percentages-of-celltypes/")
-
-write.csv(annotated_populations, file = "ascites_annotated_populations_counts.csv")
+write.csv(annotated_populations, file = here('outputs', '12_flow-cytometric-data-percentages-of-celltypes', 'ascites_annotated_populations_counts.csv'))
 

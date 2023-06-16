@@ -5,9 +5,14 @@ library(dplyr)
 library(tidyr)
 library(xlsx)
 
-# Setting of the working directory
+# Creating the outputs directory
+dir.create(here('outputs'))
 
-setwd("outputs/14_percentages-of-celltypes/")
+# Creating the directory for files output
+dir.create(here('outputs','13_flow-cytometric-data-output-plots'))
+
+# Setting of the directory for input download
+setwd("outputs/12_flow-cytometric-data-percentages-of-celltypes/")
 
 # Plot with populations of epithelial cells, fibroblasts, macrophages and T cells
 ## Loading of the data
@@ -27,13 +32,14 @@ ep_fib_mac_Tcells$celltype <- factor(ep_fib_mac_Tcells$celltype,
 
 ## Generating the plot
 
-ggplot(ep_fib_mac_Tcells, 
+plot1 <- ggplot(ep_fib_mac_Tcells, 
        aes(x = Patient, y = percentage, fill = celltype)) +
   geom_bar(stat = 'identity') +
   scale_fill_manual(values = c('#f2746a','#7bae41','#1ebdbf','#a880b9')) +
   ylab('Cell type summary')
 
-
+save(plot1, file = here('outputs', '13_flow-cytometric-data-output-plots','percentages_main_celltypes_with_Tcells.svg'))
+save(plot1, file = here('outputs', '13_flow-cytometric-data-output-plots','percentages_main_celltypes_with_Tcells.pdf'))
 
 
 
@@ -56,8 +62,12 @@ ep_fib_macs$celltype <- factor(ep_fib_macs$celltype,
 
 ## Generating the plot
 
-ggplot(ep_fib_macs, 
+plot2 <- ggplot(ep_fib_macs, 
        aes(x = Patient, y = percentage, fill = celltype)) +
   geom_bar(stat = 'identity') +
   scale_fill_manual(values = c('#f2746a','#7bae41','#1ebdbf')) +
   ylab('Cell type summary')
+
+
+save(plot2, file = here('outputs', '13_flow-cytometric-data-output-plots','percentages_main_celltypes.svg'))
+save(plot2, file = here('outputs', '13_flow-cytometric-data-output-plots','percentages_main_celltypes.pdf'))

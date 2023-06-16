@@ -44,16 +44,11 @@ This repository contains three folders required to obtain the tables and figures
   - 10_RNAseq_comparison_d.R (*Fig. 6F, 6F'*)
   - 10_RNAseq_comparison_e.R (*Fig. 6E, 6E'*)
   - 11_flow_cytometric_data_transformation.R 
-<<<<<<< HEAD
-  - 12_flow_cytometric_data_clustering_and_annotation.R (*Fig. 5C'*, *Suppl. Fig. 3A*)
-  - 13_flow_cytometric_data_generating_of_final_plots.R (*Fig. 5C, 5C'*)
-  - 14_survival-analysis.R
-  - 15_FlowJo_vs_FlowSOM_output_correlation.R (*Suppl. Fig. 3B'*)
-=======
   - 12_flow_cytometric_data_clustering_and_annotation.R (*Fig. 6C*)
   - 13_flow_cytometric_data_generating_of_final_plots.R (*Fig. 6D, 6D'*)
   - 14_survival-analysis.R (*Fig. 3D*, *Fig. 7*)
->>>>>>> 306688aa83484cbfc7674383d36c50386807c485
+  - 15_FlowJo_vs_FlowSOM_output_correlation.R (*Suppl. Fig. 3B'*)
+
   
 `outputs`: resulting Figures/Tables (some have been adjusted further in Affinity Designer software)
 

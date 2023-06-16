@@ -2,9 +2,6 @@
 # Libraries required
 library(flowCore)
 
-#Setting of the working directory
-setwd("outputs/12_preprocessed-fcs-files/")
-
 # Loading of preprocessed samples
 P1 <- flowCore::read.FCS("P1_viable_cells.fcs", truncate_max_range = FALSE)
 P2 <- flowCore::read.FCS("P2_viable_cells.fcs", truncate_max_range = FALSE)
@@ -89,9 +86,6 @@ P14_transformed <- flowCore::transform(P14, P14_transformList)
 
 
 # Export of the transformed fcs files 
-
-setwd("outputs/13_transformed-fcs-files/")
-
 write.FCS(P1_transformed, filename = "P1_transformed.fcs")
 write.FCS(P2_transformed, filename = "P2_transformed.fcs")
 write.FCS(P3_transformed, filename = "P3_transformed.fcs")
