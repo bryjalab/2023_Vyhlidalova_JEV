@@ -52,4 +52,4 @@ This repository contains three folders required to obtain the tables and figures
 
 To reproduce the analyses, the user is expected to create an R-project, and download the folders `data` (please download proteinGroups table from PRIDE) and `code`. `outputs` folder (and subsequent output folder structure) will be created while running the 01_DLS-data.R script or following scripts, respectively.
 
-All analyses were conducted using R version 4.3.0 (2022-10-31 ucrt) running on Windows 10 x64.
+All analyses were conducted using R version 4.3.0 (2023-04-21 ucrt) running on Windows 10 x64.
