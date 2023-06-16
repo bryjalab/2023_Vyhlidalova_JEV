@@ -1,4 +1,4 @@
-# Protein composition of extracellular vesicles from malignant ascites defines the key components of tumor microenvironment and predicts prognosis of ovarian cancer patients
+# Proteomic analysis of ascitic extracellular vesicles describes tumor microenvironment and predicts survival in ovarian cancer
 
 ## Authors
 
