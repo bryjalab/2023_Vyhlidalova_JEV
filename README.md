@@ -31,22 +31,22 @@ This repository contains three folders required to obtain the tables and figures
 
   - 01_DLS-data.R (*Fig. S1B*)
   - 02_data-cleaning_genenames-update.R 
-  - 03_data-processing.R 
-  - 04_MISEV-markers-mapping.R (*Fig. 1C*, *Suppl. Table 3*)
+  - 03_data-processing.R (*Fig. 1C*)
+  - 04_MISEV-markers-mapping.R (*Fig. 1D*, *Suppl. Table 3*)
   - 05_filter-out-B-samples.R (*Fig. 1B*)
   - 06_methods-intersection.R (*Fig. 2B, S2A, S2A'*, *Suppl. Table 4*)
   - 07_intersections_101.R (*Fig. 2C, 2D, S2B*, *Suppl. Table 5*)
   - 08_intersections_392.R (*Fig. 2C, 2D, S2B*, *Suppl. Table 6*)
   - 09_controls-addition.R (*Suppl. Table 7*)
   - 10_RNAseq_comparison_a.R (*Fig. 4B, 4C*)
-  - 10_RNAseq_comparison_b.R (*Fig. 5A, 5B', 5C*)
-  - 10_RNAseq_comparison_c.R
-  - 10_RNAseq_comparison_d.R
-  - 10_RNAseq_comparison_e.R
+  - 10_RNAseq_comparison_b.R (*Fig. 5A, 5B, 5B'*)
+  - 10_RNAseq_comparison_c.R (*Fig. 5B''*)
+  - 10_RNAseq_comparison_d.R (*Fig. 6F, 6F'*)
+  - 10_RNAseq_comparison_e.R (*Fig. 6E, 6E'*)
   - 11_flow_cytometric_data_transformation.R 
-  - 12_flow_cytometric_data_clustering_and_annotation.R (*Fig. 5C'*, *Suppl. Fig. 3A*)
-  - 13_flow_cytometric_data_generating_of_final_plots.R (*Fig. 5C, 5C'*)
-  - 14_survival-analysis.R
+  - 12_flow_cytometric_data_clustering_and_annotation.R (*Fig. 6C*)
+  - 13_flow_cytometric_data_generating_of_final_plots.R (*Fig. 6D, 6D'*)
+  - 14_survival-analysis.R (*Fig. 3D*, *Fig. 7*)
   
 `outputs`: resulting Figures/Tables (some have been adjusted further in Affinity Designer software)
 
