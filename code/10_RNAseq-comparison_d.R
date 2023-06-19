@@ -43,6 +43,7 @@ UC.merge <- UC_long %>%
   mutate(intensity_norm = intensity/sum(intensity)*100) %>%
   group_by(patient, cell.type) %>%
   summarise(sum_category = sum(intensity_norm)) %>%
+  left_join(., primary.cells.long, by = c("patient" = "patient", "cell.type" = "cell.type")) %>%
   filter(patient != "patient_11") %>%
   mutate(fold_enrichment = sum_category/percent) %>%
   ungroup()
