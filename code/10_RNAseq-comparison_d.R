@@ -51,6 +51,29 @@ UC.merge$cell.type <- as.factor(UC.merge$cell.type)
 
 UC.merge$fold_enrichment_log2 <- log2(UC.merge$fold_enrichment)
 
+# Compute medians
+SEC.merge %>%
+  group_by(cell.type) %>%
+  summarise(median.FE = median(fold_enrichment),
+            median.FE.log = median(fold_enrichment_log2))
+
+UC.merge %>%
+  group_by(cell.type) %>%
+  summarise(median.FE = median(fold_enrichment),
+            median.FE.log = median(fold_enrichment_log2))
+
+# Compute means
+SEC.merge %>%
+  group_by(cell.type) %>%
+  summarise(mean.FE = mean(fold_enrichment),
+            mean.FE.log = mean(fold_enrichment_log2))
+
+UC.merge %>%
+  group_by(cell.type) %>%
+  summarise(mean.FE = mean(fold_enrichment),
+            mean.FE.log = mean(fold_enrichment_log2))
+
+
 # Repeated measures ANOVA
 
 # SEC
