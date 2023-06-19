@@ -18,14 +18,14 @@ RNAseq_markers <- read.csv(here('outputs', '02_data-cleaning', 'updated_Izar_cel
 
 # Filter just the subset of proteins defined by Izar:
 RNAseq_markers <- RNAseq_markers[RNAseq_markers$Gene.Name %in% c("CLDN3", "FOLR1", "ELF3", "CLDN4", "EPCAM", "TACSTD2", "KRTCAP3", "MMP7", "CLDN7", "SOX17",
-                                                  "PRSS22", "C1orf186", "TSPAN1", "CKB", "S100A14", "LCN2", "SMIM22", "KLF5", "TMEM139",
-                                                  "FXYD3", "PRSS8", "IGF2", "LYNX1", "WNT7A", "SPINT2", "KCNK15", "LYPD1", "SCNN1A", "MEDAG",
-                                                  "FGF7", "COL1A1", "DCN", "SERPINE1", "COL1A2", "VCAM1", "EMILIN1", "NID2", "BDKRB1", "COL3A1",
-                                                  "RGS4", "CDH11", "POSTN", "GPC3", "COL5A1", "CCDC80", "COL5A2", "LOX", "PROCR", "CALB2", "SERPINB2",
-                                                  "TDO2", "FILIP1L", "COL8A1", "PTGER3", "DPP4", "PLS3", "AIF1", "MS4A4A", "MS4A6A", "LY86", "LRRC25",
-                                                  "PILRA", "STAB1", "VSIG4", "CD14", "CD68", "MS4A7", "SLCO2B1", "LILRB2", "CYBB", "ASGR1", "C5AR1",
-                                                  "CD84", "CSF1R", "FCGR1A", "CD163", "ADAP2", "C1QC", "IGSF6", "SLC11A1", "SCIMP", "CD33",
-                                                  "RP11-290F20.3", "FPR1"), ]
+                                                                 "PRSS22", "C1orf186", "TSPAN1", "CKB", "S100A14", "LCN2", "SMIM22", "KLF5", "TMEM139",
+                                                                 "FXYD3", "PRSS8", "IGF2", "LYNX1", "WNT7A", "SPINT2", "KCNK15", "LYPD1", "SCNN1A", "MEDAG",
+                                                                 "FGF7", "COL1A1", "DCN", "SERPINE1", "COL1A2", "VCAM1", "EMILIN1", "NID2", "BDKRB1", "COL3A1",
+                                                                 "RGS4", "CDH11", "POSTN", "GPC3", "COL5A1", "CCDC80", "COL5A2", "LOX", "PROCR", "CALB2", "SERPINB2",
+                                                                 "TDO2", "FILIP1L", "COL8A1", "PTGER3", "DPP4", "PLS3", "AIF1", "MS4A4A", "MS4A6A", "LY86", "LRRC25",
+                                                                 "PILRA", "STAB1", "VSIG4", "CD14", "CD68", "MS4A7", "SLCO2B1", "LILRB2", "CYBB", "ASGR1", "C5AR1",
+                                                                 "CD84", "CSF1R", "FCGR1A", "CD163", "ADAP2", "C1QC", "IGSF6", "SLC11A1", "SCIMP", "CD33",
+                                                                 "RP11-290F20.3", "FPR1"), ]
 
 RNAseq_markers$X <- NULL
 RNAseq_markers$cell.type[RNAseq_markers$cell.type == "CAFs"] <- "fibroblast"
@@ -129,7 +129,7 @@ UC_long %>%
   mutate(mean.intensity = mean(intensity)) %>%
   ungroup() %>%
   group_by(patient) %>%
-  mutate(iBAQ.percent = mean.intensity/sum(intensity)*100) %>%
+  mutate(intensity.percent = mean.intensity/sum(intensity)*100) %>%
   mutate(patients_factor = factor(patient, levels = c("patient_1", "patient_2", "patient_3", "patient_4",
                                                       "patient_5", "patient_6", "patient_7", "patient_8",
                                                       "patient_9", "patient_10", "patient_11"))) %>%
