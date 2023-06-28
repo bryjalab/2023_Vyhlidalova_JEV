@@ -4,7 +4,7 @@
 
 Vyhlídalová Kotrbová A, Gömöryová K, Mikulová A, Kravec M, Plešingerová H, Potěšil D, Blériot C, Bied M, Dunsmore G, Kotouček J, Bednaříková M, Hausnerová J, Minář L, Crha I, Jandáková E, Zdráhal Z, Ginhoux F, Weinberger V, Bryja V, Hlaváčková Pospíchalová V*
 
-* Corresponding author: pospich@sci.muni.cz 
+* Corresponding author: pospich@sci.muni.cz, bryja@sci.muni.cz
 
 ## Reproducing the data analysis from this article
 
