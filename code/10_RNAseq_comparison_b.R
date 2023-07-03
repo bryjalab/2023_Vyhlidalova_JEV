@@ -29,31 +29,76 @@ RNAseq_markers <- RNAseq_markers[RNAseq_markers$Gene.Name %in% c("CLDN3", "FOLR1
 
 RNAseq_markers$X <- NULL
 RNAseq_markers$cell.type[RNAseq_markers$cell.type == "CAFs"] <- "fibroblast"
-patients <- read.csv(here('outputs', '06_methods-intersection', '06_upsetplot_background-table.csv')) # 2418 proteins present in >=1 S&U
-patients$X <- NULL
+
+
+# Heatmaps ####
+## SEC ####
+# Load MS intensities and reduce them to binary form according to their presence/non-presence
 data.filtered <- read.csv(here('outputs', '05_filter-out-B-samples', '05_data_filtered-out-B-samples.csv'))
 
-# Plot binary heatmap for Izar markers present in our data
+data.filtered.binary <- data.filtered
+data.filtered.binary[is.na(data.filtered.binary)] <- 0
+data.filtered.binary <- data.filtered.binary %>%
+  mutate(across(U1:S11, ~ ifelse(. > 0, 1, 0)))
+
+
+# Select 41 cell-specific proteins present in >=1 S&U and add their presence info specific to SEC and UC
 RNAseq_subset_binary <- left_join(patients, RNAseq_markers, by = c("value" = "Suggested.Symbol"))
-RNAseq_subset_binary <- na.omit(RNAseq_subset_binary)
+RNAseq_subset_binary <- na.omit(RNAseq_subset_binary) %>% 
+  mutate(cell.type = factor(cell.type, levels = c("epithelial_cancer_cells", "fibroblast", "macrophages"))) 
+levels(RNAseq_subset_binary$cell.type) <- list("malignant" = "epithelial_cancer_cells", "fibroblast" = "fibroblast", "macrophage" = "macrophages")
 
-RNAseq_subset_binary_mat <- as.matrix(RNAseq_subset_binary[, 2:12])
-rownames(RNAseq_subset_binary_mat) <-RNAseq_subset_binary$value
 
-category <- factor(RNAseq_subset_binary$cell.type)
+RNAseq_subset_binary <- data.filtered.binary %>% 
+  select(c(starts_with("S"), starts_with("U"))) %>% 
+  left_join(x = RNAseq_subset_binary, y = ., by = c("value" = "Suggested.Symbol"))
+
+# Plot binary heatmap for Izar markers present in our data specific to SEC
+RNAseq_subset_binary_SEC <- RNAseq_subset_binary %>% 
+  select(c("value", "cell.type", starts_with("S"))) 
+
+RNAseq_subset_binary_SEC_mat <- as.matrix(RNAseq_subset_binary_SEC[, 3:13])
+rownames(RNAseq_subset_binary_SEC_mat) <-RNAseq_subset_binary$value
+
+category <- RNAseq_subset_binary_SEC$cell.type
 
 row_ha <- rowAnnotation(category = category)
 
-svg(here('outputs', '11_RNAseq-comparison_II', '11_RNAseq_heatmap-binary.svg'))
-#pdf(here('outputs', '11_RNAseq-comparison_II', '11_RNAseq-heatmap-binary.pdf'))
-Heatmap(RNAseq_subset_binary_mat,  col = c("white", "black"),
+svg(here('outputs', '11_RNAseq-comparison_II', '11_RNAseq_heatmap-binary_SEC.svg'))
+pdf(here('outputs', '11_RNAseq-comparison_II', '11_RNAseq-heatmap-binary_SEC.pdf'))
+Heatmap(RNAseq_subset_binary_SEC_mat,  col = c("white", "black"),
         right_annotation = row_ha,
+        split = RNAseq_subset_binary_SEC$cell.type,
+        row_title = NULL,
+        cluster_row_slices = FALSE,
         row_names_gp = gpar(fontsize = 5))
 dev.off()
 
+# Plot binary heatmap for Izar markers present in our data specific to UC
+RNAseq_subset_binary_UC <- RNAseq_subset_binary %>% 
+  select(c("value", "cell.type", starts_with("U"))) 
+
+RNAseq_subset_binary_UC_mat <- as.matrix(RNAseq_subset_binary_UC[, 3:13])
+rownames(RNAseq_subset_binary_UC_mat) <-RNAseq_subset_binary$value
+
+category <- RNAseq_subset_binary_SEC$cell.type
+
+row_ha <- rowAnnotation(category = category)
+
+svg(here('outputs', '11_RNAseq-comparison_II', '11_RNAseq_heatmap-binary_UC.svg'))
+pdf(here('outputs', '11_RNAseq-comparison_II', '11_RNAseq-heatmap-binary_UC.pdf'))
+Heatmap(RNAseq_subset_binary_UC_mat,  col = c("white", "black"),
+        right_annotation = row_ha,
+        split = RNAseq_subset_binary_UC$cell.type,
+        cluster_row_slices = FALSE,
+        row_title = NULL,
+        row_names_gp = gpar(fontsize = 5))
+dev.off()
+
+
 # SEC barplots
-SEC1 <- RNAseq_subset_binary_mat
-SEC2 <- data.filtered[data.filtered$Suggested.Symbol %in% rownames(RNAseq_subset_binary_mat), ]
+SEC1 <- RNAseq_subset_binary_SEC_mat
+SEC2 <- data.filtered[data.filtered$Suggested.Symbol %in% rownames(RNAseq_subset_binary_SEC_mat), ]
 
 SEC2 <- SEC2 %>% select(-starts_with("U"), -X, -name, -ID)
 rownames(SEC2) <- SEC2$Suggested.Symbol
@@ -74,7 +119,8 @@ for (i in 1:nrow(SEC_final)) {
 
 SEC_long <- as.data.frame(SEC_final)
 SEC_long <- left_join(rownames_to_column(SEC_long), RNAseq_subset_binary %>% select(value, cell.type), by = c("rowname" = "value"))
-SEC_long <- pivot_longer(SEC_long, cols = patient_1:patient_11, names_to = 'patient', values_to = 'intensity')
+SEC_long <- pivot_longer(SEC_long, cols = S1:S11, names_to = 'patient', values_to = 'intensity')
+SEC_long$patient <- gsub(pattern = "S", replacement = "patient_", SEC_long$patient)
 
 svg(here('outputs', '11_RNAseq-comparison_II', '11_RNAseq_heatmap-SEC.svg'))
 #pdf(here('outputs', '11_RNAseq-comparison_II', '11_RNAseq-heatmap-SEC.pdf'))
@@ -83,11 +129,11 @@ SEC_long %>%
   mutate(mean.intensity = mean(intensity)) %>%
   ungroup() %>%
   group_by(patient) %>%
-  mutate(intensity.percent = mean.intensity/sum(intensity)*100) %>%
+  mutate(intensity.relative = mean.intensity/sum(intensity)) %>%
   mutate(patients_factor = factor(patient, levels = c("patient_1", "patient_2", "patient_3", "patient_4",
                                                       "patient_5", "patient_6", "patient_7", "patient_8",
                                                       "patient_9", "patient_10", "patient_11"))) %>%
-  ggplot(., aes(x = patients_factor, y = intensity.percent, fill = cell.type))+
+  ggplot(., aes(x = patients_factor, y = intensity.relative, fill = cell.type))+
   geom_bar(stat = "identity")  +
   theme(axis.text.x = element_text(angle = 45,  hjust=1))+
   labs(title = "RNAseq SEC")
@@ -95,10 +141,10 @@ dev.off()
 
 # UC barplots
 
-UC1 <- RNAseq_subset_binary_mat
-UC2 <- data.filtered[data.filtered$Suggested.Symbol %in% rownames(RNAseq_subset_binary_mat), ]
+UC1 <- RNAseq_subset_binary_UC_mat
+UC2 <- data.filtered[data.filtered$Suggested.Symbol %in% rownames(RNAseq_subset_binary_UC_mat), ]
 
-UC2 <- UC2 %>% select(-c(S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11), -X, -name, -ID)
+UC2 <- UC2 %>% select(c("Suggested.Symbol", starts_with("U")))
 rownames(UC2) <- UC2$Suggested.Symbol
 UC2$Suggested.Symbol <- NULL
 
@@ -117,7 +163,8 @@ for (i in 1:nrow(UC_final)) {
 
 UC_long <- as.data.frame(UC_final)
 UC_long <- left_join(rownames_to_column(UC_long), RNAseq_subset_binary %>% select(value, cell.type), by = c("rowname" = "value"))
-UC_long <- pivot_longer(UC_long, cols = patient_1:patient_11, names_to = 'patient', values_to = 'intensity')
+UC_long <- pivot_longer(UC_long, cols = U1:U11, names_to = 'patient', values_to = 'intensity')
+UC_long$patient <- gsub(pattern = "U", replacement = "patient_", UC_long$patient)
 
 # Save SEC and UC long dataframes
 save(SEC_long, UC_long, file = here('outputs', '11_RNAseq-comparison_II', '11_SEC-UC-long-df.RData'))
@@ -129,11 +176,11 @@ UC_long %>%
   mutate(mean.intensity = mean(intensity)) %>%
   ungroup() %>%
   group_by(patient) %>%
-  mutate(intensity.percent = mean.intensity/sum(intensity)*100) %>%
+  mutate(intensity.relative = mean.intensity/sum(intensity)) %>%
   mutate(patients_factor = factor(patient, levels = c("patient_1", "patient_2", "patient_3", "patient_4",
                                                       "patient_5", "patient_6", "patient_7", "patient_8",
                                                       "patient_9", "patient_10", "patient_11"))) %>%
-  ggplot(., aes(x = patients_factor, y = intensity.percent, fill = cell.type))+
+  ggplot(., aes(x = patients_factor, y = intensity.relative, fill = cell.type))+
   geom_bar(stat = "identity")  +
   theme(axis.text.x = element_text(angle = 45,  hjust=1))+
   labs(title = "RNAseq UC")
