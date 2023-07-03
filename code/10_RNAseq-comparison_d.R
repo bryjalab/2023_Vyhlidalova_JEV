@@ -70,7 +70,9 @@ svg(here("outputs", "11_RNASeq-comparison_II", "11_fold-enrichment_SEC_anova.svg
 pdf(here("outputs", "11_RNASeq-comparison_II", "11_fold-enrichment_SEC_anova.pdf"))
 q <- SEC.merge %>% 
   ggplot(aes(x = cell.type, y = fold_enrichment_log2)) +
-  geom_point(size = 3, aes(col = cell.type, shape = cell.type)) +
+  geom_point(size = 3, 
+	     position = position_jitter(width = 0.1),
+	     aes(col = cell.type, shape = cell.type)) +
   theme_prism(axis_text_angle = 45, base_size = 12)+
   stat_summary(fun="mean", geom="point", color="black", size=2,
                fun.min = function(z) { quantile(z,0.25) },
@@ -98,7 +100,9 @@ svg(here("outputs", "11_RNASeq-comparison_II", "11_fold-enrichment_UC_anova.svg"
 pdf(here("outputs", "11_RNASeq-comparison_II", "11_fold-enrichment_UC_anova.pdf"))
 q <- UC.merge %>% 
   ggplot(aes(x = cell.type, y = fold_enrichment_log2)) +
-  geom_point(size = 3, aes(col = cell.type, shape = cell.type)) +
+  geom_point(size = 3, 
+	     position = position_jitter(width = 0.1),
+	     aes(col = cell.type, shape = cell.type)) +
   theme_prism(axis_text_angle = 45, base_size = 12)+
   stat_summary(fun="mean", geom="point", color="black", size=2,
                fun.min = function(z) { quantile(z,0.25) },
@@ -157,7 +161,9 @@ svg(here("outputs", "11_RNASeq-comparison_II", "11_fold-enrichment_SEC_anova_pri
 pdf(here("outputs", "11_RNASeq-comparison_II", "11_fold-enrichment_SEC_anova_primaryCells.pdf"))
 q <- SEC.merge.all %>% 
   ggplot(aes(x = cell.type, y = fold_enrichment_log2)) +
-  geom_point(size = 3, aes(col = cell.type, shape = cell.type)) +
+  geom_point(size = 3, 
+             position = position_jitter(width = 0.1),
+	     aes(col = cell.type, shape = cell.type)) +
   theme_prism(axis_text_angle = 45, base_size = 12)+
   stat_summary(fun="mean", geom="point", color="black", size=2,
                fun.min = function(z) { quantile(z,0.25) },
@@ -199,7 +205,9 @@ svg(here("outputs", "11_RNASeq-comparison_II", "11_fold-enrichment_UC_anova_prim
 pdf(here("outputs", "11_RNASeq-comparison_II", "11_fold-enrichment_UC_anova_primaryCells.pdf"))
 q <- UC.merge.all %>% 
   ggplot(aes(x = cell.type, y = fold_enrichment_log2)) +
-  geom_point(size = 3, aes(col = cell.type, shape = cell.type)) +
+  geom_point(size = 3, 
+             position = position_jitter(width = 0.1),
+             aes(col = cell.type, shape = cell.type)) +
   theme_prism(axis_text_angle = 45, base_size = 12)+
   stat_summary(fun="mean", geom="point", color="black", size=2,
                fun.min = function(z) { quantile(z,0.25) },
