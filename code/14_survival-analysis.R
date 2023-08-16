@@ -16,7 +16,7 @@ os <- read.csv2(here("data", "survival-data.csv")) %>%
   mutate(Dead = as.numeric(Dead)) #%>% 
  
 # Load data with MS intensities 
-load(here("analysis", "05_filter-out-B-samples", "05_data.filtered.Rdata")) 
+load(here("outputs", "05_filter-out-B-samples", "05_data.filtered.Rdata")) 
 
 # Load 45 cell-specific proteins
 load(here("outputs", "11_RNAseq-comparison_II", "11_SEC-UC-long-df.RData"))
@@ -37,9 +37,9 @@ dir.create(here("output", "14_survival-analysis"))
 ############################# UC SAMPLES ######################################
 
 # Select UC samples
-ms.uc <- data.filtered.157 %>% 
-  dplyr::select(c("ID", starts_with("U"))) %>% 
-  column_to_rownames(var = "ID") %>% 
+ms.uc <- data.filtered.45 %>% 
+  dplyr::select(c("Suggested.Symbol", starts_with("U"))) %>%   
+  column_to_rownames(var = "Suggested.Symbol") %>%   
   t() %>% 
   as.data.frame() %>% 
   rownames_to_column(var = "Patient") %>% 
@@ -122,4 +122,4 @@ tab_sel_uc <- tab_sel_uc[-1,]
 
 
 #  Export results
-write.csv(sec.uc, file = here("output", "14_survival-analysis", "14_45-proteins-best-cut-offs.csv"))
+write.csv(tab_sel_uc, file = here("outputs", "14_survival-analysis", "14_45-proteins-best-cut-offs.csv"))
