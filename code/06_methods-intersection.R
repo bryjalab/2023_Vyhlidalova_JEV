@@ -8,6 +8,7 @@ library(dplyr)
 library(reshape2)
 library(UpSetR)
 library(ggplot2)
+library(tidyr)
 
 source(here('code', "functions.R"))
 
