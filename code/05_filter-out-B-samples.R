@@ -61,24 +61,31 @@ dev.off()
 tmp <- data.frame(Suggested.Symbol = data$Suggested.Symbol)
 data.filtered <- data.frame(Suggested.Symbol = data$Suggested.Symbol)
 
-data.filtered <- filter_B(data, B1, U1, S1)
-data.filtered <- filter_B(data, B2, U2, S2)
-data.filtered <- filter_B(data, B3, U3, S3)
-data.filtered <- filter_B(data, B4, U4, S4)
-data.filtered <- filter_B(data, B5, U5, S5)
-data.filtered <- filter_B(data, B6, U6, S6)
-data.filtered <- filter_B(data, B7, U7, S7)
-data.filtered <- filter_B(data, B8, U8, S8)
-data.filtered <- filter_B(data, B9, U9, S9)
-data.filtered <- filter_B(data, B10, U10, S10)
-data.filtered <- filter_B(data, B11, U11, S11)
+data.filtered1 <- filter_B(data, B1, U1, S1)
+data.filtered2 <- filter_B(data, B2, U2, S2)
+data.filtered3 <- filter_B(data, B3, U3, S3)
+data.filtered4 <- filter_B(data, B4, U4, S4)
+data.filtered5 <- filter_B(data, B5, U5, S5)
+data.filtered6 <- filter_B(data, B6, U6, S6)
+data.filtered7 <- filter_B(data, B7, U7, S7)
+data.filtered8 <- filter_B(data, B8, U8, S8)
+data.filtered9 <- filter_B(data, B9, U9, S9)
+data.filtered10 <- filter_B(data, B10, U10, S10)
+data.filtered11 <- filter_B(data, B11, U11, S11)
 
-colnames(data.filtered)[1] <- "Suggested.Symbol"
-
-data.filtered <- left_join(data.filtered, data %>% select(Suggested.Symbol, name, ID), by = c("Suggested.Symbol" = "Suggested.Symbol"))
-data.filtered$Suggested.Symbol[duplicated(data.filtered$Suggested.Symbol)]
+data.filtered <- data.filtered %>%
+  left_join(., data.filtered1, by = "Suggested.Symbol") %>%
+  left_join(., data.filtered2, by = "Suggested.Symbol") %>%
+  left_join(., data.filtered3, by = "Suggested.Symbol") %>%
+  left_join(., data.filtered4, by = "Suggested.Symbol") %>%
+  left_join(., data.filtered5, by = "Suggested.Symbol") %>%
+  left_join(., data.filtered6, by = "Suggested.Symbol") %>%
+  left_join(., data.filtered7, by = "Suggested.Symbol") %>%
+  left_join(., data.filtered8, by = "Suggested.Symbol") %>%
+  left_join(., data.filtered9, by = "Suggested.Symbol") %>%
+  left_join(., data.filtered10, by = "Suggested.Symbol") %>%
+  left_join(., data.filtered11, by = "Suggested.Symbol") 
 
 # Save filtered data
 write.csv(data.filtered, here("outputs", "05_filter-out-B-samples", "05_data_filtered-out-B-samples.csv"))
-save(data.filtered, file = here("outputs", "05_filter-out-B-samples", "05_data_filtered-out-B-samples.Rdata"))
 save(data.filtered, file = here("outputs", "05_filter-out-B-samples", "05_data.filtered.Rdata"))

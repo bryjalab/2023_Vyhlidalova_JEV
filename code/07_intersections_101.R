@@ -6,14 +6,14 @@
 # 101 proteins are in the 'intersection of intersections', ie were identified by both
 # UC and SEC in all patients
 
-# Create output directory
-dir.create(here('outputs', '07_intersections_101'))
-
 # Libraries required:
 library(here)
 library(dplyr)
 library(ggplot2)
 library(gprofiler2)
+
+# Create output directory
+dir.create(here('outputs', '07_intersections_101'))
 
 # Load the data
 load(here('outputs', '06_methods-intersection', '06_intersections.Rdata'))

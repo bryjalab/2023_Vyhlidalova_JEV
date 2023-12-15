@@ -83,7 +83,7 @@ HCM <- read.csv(here('outputs', '02_data-cleaning', 'updated_preys-latest.csv'))
 HCM <- left_join(data_392, HCM %>% select(Suggested.Symbol, MMF.localization), by = c("Suggested.Symbol" = "Suggested.Symbol"))
 
 svg(here('outputs', '08_intersections_392', '08_392-proteins_HCM.svg'))
-pdf(here('outputs', '08_intersections_392', '08_392-proteins_HCM.pdf'))
+#pdf(here('outputs', '08_intersections_392', '08_392-proteins_HCM.pdf'))
 HCM %>%
   group_by(MMF.localization) %>%
   summarise(n = n()) %>%
