@@ -9,11 +9,15 @@ library(survival)
 library(gtsummary)
 library(survminer)
 
+# Create a new directory for processed data:
+dir.create(here("output", "14_survival-analysis"))
 
 # Load the survival data:
 os <- read.csv2(here("data", "survival-data.csv")) %>% 
   mutate(Patient = as.factor(Patient)) %>% 
-  mutate(Dead = as.numeric(Dead)) #%>% 
+  mutate(Dead = as.numeric(Dead))
+
+############################# UC SAMPLES ######################################
  
 # Load data with MS intensities 
 load(here("outputs", "05_filter-out-B-samples", "05_data.filtered.Rdata")) 
@@ -24,17 +28,10 @@ fac <- SEC_long$rowname %>%
   unique() %>% 
   c("MRC1", "IDH2", "FAS", "ITGB8")
 
-
 # Filter MS intensities for 45 cell-specific proteins
 data.filtered.45 <- data.filtered %>% 
   filter(Suggested.Symbol %in% fac)
 data.filtered.45[is.na(data.filtered.45)] <- 0
-
-# Create a new directory for processed data:
-dir.create(here("output", "14_survival-analysis"))
-
-
-############################# UC SAMPLES ######################################
 
 # Select UC samples
 ms.uc <- data.filtered.45 %>% 
@@ -117,9 +114,164 @@ for (j in c(1:(length(fac)))) {
   }
 }
 
+# Add IDH2
+f_str <- "IDH2"
+f <-  eval(parse(text = paste0("ms.uc$",f_str)))
+f <- as.numeric(as.character(factor(f)))   
+
+if (length(f) > 0)
+{
+  p = NA
+  cut = NA
+  HR = NA
+  LCL = NA
+  UCL = NA
+  bellow.cut = NA
+  above.cut = NA
+  
+  # Sort unique MS intensities
+  f_sort <- f %>% as.data.frame() %>% distinct()
+  f.sort = sort(f_sort$.)
+  
+  # Compute survival analysis for individual cut-offs
+  i = 1
+  for (i in c(1:(length(f.sort) - 1)))
+  {
+    groups.f = rep(NA, length(f))
+    c <- (f.sort[i] + f.sort[i + 1]) / 2
+    groups.f[which(f < c)] = paste0("<", as.character(c))
+    groups.f[which(f >= c)] = paste0(">", as.character(c))
+    
+    fit.f = survfit(OS ~ groups.f, data = ms.uc)
+    test.f = survdiff(OS ~ groups.f, rho = 0, data = ms.uc)
+    cox.f = coxph(OS ~ groups.f, data = ms.uc)
+    
+    p[i] = 1 - pchisq(test.f[[5]], df = 1)
+    
+    cut[i] = (f.sort[i] + f.sort[i + 1]) / 2
+    
+    HR[i] = summary(cox.f)$conf.int[1]
+    LCL[i] = summary(cox.f)$conf.int[3]
+    UCL[i] = summary(cox.f)$conf.int[4]
+    
+    bellow.cut[i] = fit.f[[1]][1]
+    above.cut[i] = fit.f[[1]][2]
+  }
+  
+  # Save results for each protein
+  tab1 <- data.frame(fac = f_str, cut = cut, p.value = p, HR = HR, LCL = LCL, UCL = UCL, bellow.cut = bellow.cut, above.cut = above.cut) 
+  tab <<- rbind(tab, tab1, c(NA))
+  
+  # Filter cut-off dividing into groups with minimal size  = 3 patients 
+  tab2 <- tab1 %>% 
+    filter(bellow.cut > 2 & bellow.cut < 9) 
+  
+  #  Extract best cut-off for each protein
+  tab_min <- tab2[which(min(tab2$p.value) == tab2$p.value),] 
+  tab_sel_uc <<- rbind(tab_sel_uc, tab_min) 
+}
+
+
 # Omit first row with NA values 
 tab_sel_uc <- tab_sel_uc[-1,] 
 
 
 #  Export results
 write.csv(tab_sel_uc, file = here("outputs", "14_survival-analysis", "14_45-proteins-best-cut-offs.csv"))
+
+
+############################# FC SAMPLES ######################################
+
+# Load the flow cytometry data
+fc.all <- read_delim(here("data", "flow_data_percentages_all_populations_final.csv"), delim = ";") %>% 
+  rename("Patient" = 1) %>% 
+  mutate(Patient = as.factor(Patient))
+
+# Merge peripheral blood cells together
+fc.all.pb <- fc.all %>% 
+  mutate(Peripheral_blood_cells = Monocytes + B_cells + CD4_T_cells + CD8_T_cells + Neutrophils + NK_cells) %>%
+  select(Patient, Epithelial_cells, Fibroblasts, Macrophages, Peripheral_blood_cells)
+
+# Extract FC populations
+fac <- colnames(fc.all.pb)[-1]
+
+# Join survival data
+fc.all.pb <- inner_join(x = os, y = fc.all.pb, by = "Patient")
+
+# Create survival object
+fc.all.pb$OS <- Surv(fc.all.pb$OS.days, fc.all.pb$Dead) 
+
+# Create table for individual cut-offs
+tab <- data.frame(fac = NA, cut = NA, p.value = NA, HR = NA, LCL = NA, UCL = NA, bellow.cut = NA, above.cut = NA)
+
+# Create table for best cut-offs in individual populations
+tab_sel <- data.frame(fac = NA, cut = NA, p.value = NA, HR = NA, LCL = NA, UCL = NA, bellow.cut = NA, above.cut = NA)
+
+# Compute survival analysis for each cut-off in each individual population
+for (j in c(1:(length(fac)))) {
+  
+  # Extract data for an individual protein
+  f_str <- fac[j]
+  f <-  eval(parse(text = paste0("fc.all.pb$",f_str)))
+  f <- as.numeric(as.character(factor(f)))   
+  
+  if (length(f) > 0)
+  {
+    p = NA
+    cut = NA
+    HR = NA
+    LCL = NA
+    UCL = NA
+    bellow.cut = NA
+    above.cut = NA
+    
+    # Sort unique FC percentages
+    f_sort <- f %>% as.data.frame() %>% distinct()
+    f.sort = sort(f_sort$.)
+    
+    # Compute survival analysis for individual cut-offs
+    i = 1
+    for (i in c(1:(length(f.sort) - 1)))
+    {
+      groups.f = rep(NA, length(f))
+      c <- (f.sort[i] + f.sort[i + 1]) / 2
+      groups.f[which(f < c)] = paste0("<", as.character(c))
+      groups.f[which(f >= c)] = paste0(">", as.character(c))
+      
+      fit.f = survfit(OS ~ groups.f, data = fc.all.pb)
+      test.f = survdiff(OS ~ groups.f, rho = 0, data = fc.all.pb)
+      cox.f = coxph(OS ~ groups.f, data = fc.all.pb)
+      
+      p[i] = 1 - pchisq(test.f[[5]], df = 1)
+      
+      cut[i] = (f.sort[i] + f.sort[i + 1]) / 2
+      
+      HR[i] = summary(cox.f)$conf.int[1]
+      LCL[i] = summary(cox.f)$conf.int[3]
+      UCL[i] = summary(cox.f)$conf.int[4]
+      
+      bellow.cut[i] = fit.f[[1]][1]
+      above.cut[i] = fit.f[[1]][2]
+    }
+    
+    # Save results for each population
+    tab1 <- data.frame(fac = f_str, cut = cut, p.value = p, HR = HR, LCL = LCL, UCL = UCL, bellow.cut = bellow.cut, above.cut = above.cut) 
+    tab <<- rbind(tab, tab1, c(NA))
+    
+    # # Filter cut-off dividing into groups with minimal size  = 3 patients 
+    tab2 <- tab1 %>% 
+      filter(bellow.cut > 2 & bellow.cut < 8) 
+    
+    #  Extract best cut-off for each population
+    tab_min <- tab2[which(min(tab2$p.value) == tab2$p.value),] 
+    tab_sel <<- rbind(tab_sel, tab_min) 
+  }
+}
+
+# Omit first row with NA values 
+tab_sel <- tab_sel[-1,] 
+
+#  Export results
+write.csv(tab_sel, file = here("outputs", "14_survival-analysis", "14-flow-cytometry_best-cut-offs.csv"))
+
+
