@@ -46,7 +46,7 @@ This repository contains three folders required to obtain the tables and figures
   - 11_flow_cytometric_data_transformation.R 
   - 12_flow_cytometric_data_clustering_and_annotation.R (*Fig. 6C*)
   - 13_flow_cytometric_data_generating_of_final_plots.R (*Fig. 6D, 6D'*)
-  - 14_survival-analysis.R (*Fig. 3D*, *Fig. 7*)
+  - 14_survival-analysis.R (*Fig. 3D*, *Fig. 7, Suppl. Table 8*)
   - 15_Lisching-comparison.R (*Fig. 1C, 1C'*)
   
 `outputs`: resulting Figures/Tables (some have been adjusted further in Affinity Designer software)
