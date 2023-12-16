@@ -12,7 +12,7 @@ library(rstatix)
 library(ggpubr)
 
 # Directory for outputs
-dir.create(here('outputs', '16_Lisching-comparison'))
+dir.create(here('outputs', '15_Lisching-comparison'))
 
 # Data input: Lischnig et al. (2022)
 data.lischnig <- read.csv(here('data', 'Lischnig_2022_suppTableS1.csv'))
@@ -74,7 +74,7 @@ data.long <- data.long %>%
                                                 "B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "B9", "B10", "B11")))
   
 # Visualize: all fractions
-pdf(here('outputs', '16_Lisching-comparison', '16_barplot-all-fractions.pdf'))
+pdf(here('outputs', '15_Lisching-comparison', '15_barplot-all-fractions.pdf'))
 data.long %>%
   filter(intensity != 0) %>%
   group_by(fraction, vesicle, fraction.ID) %>%
@@ -87,7 +87,7 @@ data.long %>%
 dev.off()
 
 # Visualize: fractions summed
-pdf(here('outputs', '16_Lisching-comparison', '16_barplot-fractions-summarized_a.pdf'))
+pdf(here('outputs', '15_Lisching-comparison', '15_barplot-fractions-summarized_a.pdf'))
 data.long %>%
   filter(intensity != 0) %>%
   group_by(vesicle, fraction.ID) %>%
@@ -99,7 +99,7 @@ data.long %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 dev.off()
 
-pdf(here('outputs', '16_Lisching-comparison', '16_barplot-fractions-summarized_b.pdf'))
+pdf(here('outputs', '15_Lisching-comparison', '15_barplot-fractions-summarized_b.pdf'))
 data.long %>%
   filter(intensity != 0) %>%
   group_by(vesicle, fraction.ID) %>%
@@ -111,7 +111,7 @@ data.long %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 dev.off()
 
-pdf(here('outputs', '16_Lisching-comparison', '16_barplot-fractions-summarized_c.pdf'))
+pdf(here('outputs', '15_Lisching-comparison', '15_barplot-fractions-summarized_c.pdf'))
 data.long %>%
   filter(intensity != 0) %>%
   group_by(vesicle, fraction.ID) %>%
@@ -122,7 +122,7 @@ data.long %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 dev.off()
 
-pdf(here('outputs', '16_Lisching-comparison', '16_barplot-fractions-percent.pdf'))
+pdf(here('outputs', '15_Lisching-comparison', '15_barplot-fractions-percent.pdf'))
 data.long %>%
   filter(intensity != 0) %>%
   group_by(fraction.ID) %>% 
