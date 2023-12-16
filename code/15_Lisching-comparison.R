@@ -57,6 +57,10 @@ data.lischnig$vesicle[data.lischnig$Suggested.Symbol %in% data.lischnig.large$Su
 data <- data %>%
   left_join(., data.lischnig %>% select(Suggested.Symbol, vesicle), by = c("Suggested.Symbol" = "Suggested.Symbol"))
 
+# Drop controls
+data <- data %>%
+  select(-starts_with("C"))
+
 # Replace NA by not.detected
 data$vesicle[is.na(data$vesicle)] <- "not.detected"
 data$vesicle[data$vesicle == ""] <- "not.significant"
@@ -66,15 +70,14 @@ data.long <- pivot_longer(data, cols = c(U7:B6), names_to = "fraction", values_t
 data.long$fraction.ID <- substr(data.long$fraction, 1, 1)
 
 data.long <- data.long %>%
-  mutate(fraction.ID = factor(fraction.ID, levels = c("C", "U", "S", "B"))) %>%
+  mutate(fraction.ID = factor(fraction.ID, levels = c("U", "S", "B"))) %>%
   mutate(vesicle  = factor(vesicle, levels = c("not.detected", "not.significant", "small", "large"))) %>%
-  mutate(fraction = factor(fraction, levels = c("C1", "C2", "C3", "C4", "C5",
-                                                "U1", "U2", "U3", "U4", "U5", "U6", "U7", "U8", "U9", "U10", "U11",
+  mutate(fraction = factor(fraction, levels = c("U1", "U2", "U3", "U4", "U5", "U6", "U7", "U8", "U9", "U10", "U11",
                                                 "S1", "S2", "S3", "S4", "S5", "S6", "S7", "S8", "S9", "S10", "S11",
                                                 "B1", "B2", "B3", "B4", "B5", "B6", "B7", "B8", "B9", "B10", "B11")))
   
 # Visualize: all fractions
-pdf(here('outputs', '15_Lisching-comparison', '15_barplot-all-fractions.pdf'))
+pdf(here('outputs', '15_Lisching-comparison', '15_barplot-all-fractions_no-ctrls.pdf'))
 data.long %>%
   filter(intensity != 0) %>%
   group_by(fraction, vesicle, fraction.ID) %>%
@@ -87,7 +90,7 @@ data.long %>%
 dev.off()
 
 # Visualize: fractions summed
-pdf(here('outputs', '15_Lisching-comparison', '15_barplot-fractions-summarized_a.pdf'))
+pdf(here('outputs', '15_Lisching-comparison', '15_barplot-fractions-summarized_a_no-ctrls.pdf'))
 data.long %>%
   filter(intensity != 0) %>%
   group_by(vesicle, fraction.ID) %>%
@@ -99,7 +102,7 @@ data.long %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 dev.off()
 
-pdf(here('outputs', '15_Lisching-comparison', '15_barplot-fractions-summarized_b.pdf'))
+pdf(here('outputs', '15_Lisching-comparison', '15_barplot-fractions-summarized_b_no-ctrls.pdf'))
 data.long %>%
   filter(intensity != 0) %>%
   group_by(vesicle, fraction.ID) %>%
@@ -111,7 +114,7 @@ data.long %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 dev.off()
 
-pdf(here('outputs', '15_Lisching-comparison', '15_barplot-fractions-summarized_c.pdf'))
+pdf(here('outputs', '15_Lisching-comparison', '15_barplot-fractions-summarized_c_no-ctrls.pdf'))
 data.long %>%
   filter(intensity != 0) %>%
   group_by(vesicle, fraction.ID) %>%
@@ -122,7 +125,7 @@ data.long %>%
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))
 dev.off()
 
-pdf(here('outputs', '15_Lisching-comparison', '15_barplot-fractions-percent.pdf'))
+pdf(here('outputs', '15_Lisching-comparison', '15_barplot-fractions-percent_no-ctrls.pdf'))
 data.long %>%
   filter(intensity != 0) %>%
   group_by(fraction.ID) %>% 
